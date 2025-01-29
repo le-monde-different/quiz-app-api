@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 
 class AuthServiceProvider extends ServiceProvider
 {
+    protected $namespace = 'App\\Http\\Controllers';
     /**
      * The model to policy mappings for the application.
      *

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Quiz;
 use Illuminate\Http\Request;
 
 class QuizController extends Controller
@@ -13,6 +14,7 @@ class QuizController extends Controller
     public function index()
     {
         //
+        return Quiz::with('questions.answers')->get();
     }
 
     /**
@@ -21,6 +23,12 @@ class QuizController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'title'=>'required|string|max:255',
+            'description'=>'nullable|string',
+        ]);
+        $quiz = Quiz::create($request->all());
+        return response()->json($quiz,201);
     }
 
     /**
@@ -29,6 +37,8 @@ class QuizController extends Controller
     public function show(string $id)
     {
         //
+        $quiz = Quiz::with('questions.answers')->findOrFail($id);
+        return response()->json($quiz);
     }
 
     /**
@@ -37,6 +47,9 @@ class QuizController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $quiz = Quiz::findOrFail($id);
+        $quiz->update($request->all());
+        return response()->json($quiz);
     }
 
     /**
@@ -45,5 +58,7 @@ class QuizController extends Controller
     public function destroy(string $id)
     {
         //
+        Quiz::destroy($id);
+        return response()->json(null,204);
     }
 }
